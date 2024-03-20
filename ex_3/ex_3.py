@@ -13,14 +13,13 @@ from colorama import Fore
 import sys
 from pathlib import Path
 
-def get_dir_content(path:Path)->list:
-    content = []
-    for obj in path:
-        if obj.is_dir():
-            content.append(get_dir_content(obj))
-        else:
-            content.append(obj)
-    return sorted(content)
+def get_dir_content(path:Path, step:str = "    "):
+        print(f"{step}∟ " + Fore.BLUE + f"{path.name}" + Fore.RESET)
+        for obj in path.iterdir():
+            if obj.is_dir():
+                get_dir_content(obj, step + "|   ")
+            else:
+                print(f"{step}|   ∟ " + Fore.GREEN + f"{obj.name}" + Fore.RESET)
 
 
 
@@ -28,10 +27,16 @@ def main():
     if len(sys.argv)>=2:
         try:
             path = Path(sys.argv[1]) 
-            path = path.absolute()
-            print(get_dir_content(path)) 
+            path = Path.absolute(path)
+            if path.exists(follow_symlinks=True):
+                print(Fore.BLUE + f"{path}" + Fore.RESET)
+                get_dir_content(path)
+            else:
+                print("No path found for display")
         except Exception:
-            print("No path found for display")
+            print("Something goes wrong")
+    else:
+        print("path not entered")
 
 
 
