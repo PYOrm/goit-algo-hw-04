@@ -28,7 +28,7 @@ def main():
         try:
             path = Path(sys.argv[1]) 
             path = Path.absolute(path)
-            if path.exists(follow_symlinks=True):
+            if path.exists():
                 print(Fore.BLUE + f"{path}" + Fore.RESET)
                 get_dir_content(path)
             else:
