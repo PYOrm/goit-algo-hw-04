@@ -14,9 +14,13 @@ import sys
 from pathlib import Path
 
 def get_dir_content(path:Path)->list:
-   a = [1,2,2,3,4]
-   a.remove()
-   pass
+    content = []
+    for obj in path:
+        if obj.is_dir():
+            content.append(get_dir_content(obj))
+        else:
+            content.append(obj)
+    return sorted(content)
 
 
 
@@ -25,9 +29,7 @@ def main():
         try:
             path = Path(sys.argv[1]) 
             path = path.absolute()
-            for obj in path.iterdir():
-               if obj.is_dir():
-                print(obj) 
+            print(get_dir_content(path)) 
         except Exception:
             print("No path found for display")
 
