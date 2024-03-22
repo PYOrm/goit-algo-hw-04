@@ -57,7 +57,7 @@ def main():
             #path = Path(sys.argv[1]) 
             path = Path("D:/GoIT/goit-markup-hw-01/images")
             path = Path.absolute(path)
-            if path.exists(follow_symlinks=True):
+            if path.exists():
                 print(Fore.BLUE + f"{path}" + Fore.RESET)
                 # get_dir_content(path)
                 print_dir_list(get_dir_list_content(path))
