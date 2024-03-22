@@ -13,6 +13,18 @@ from colorama import Fore
 import sys
 from pathlib import Path
 
+def get_dir_list_content(path:Path) -> list:
+        result = list()
+        new_list = list()
+        result.append({path.name:"dir"})
+        for obj in path.iterdir():
+            if obj.is_dir():
+                new_list.append(get_dir_list_content(obj))
+            else:
+                new_list.append({obj.name:"file"})
+        result.append(new_list)
+        return result
+
 def get_dir_content(path:Path, step:str = "    "):
         print(f"{step}∟ " + Fore.BLUE + f"{path.name}" + Fore.RESET)
         for obj in path.iterdir():
@@ -21,16 +33,34 @@ def get_dir_content(path:Path, step:str = "    "):
             else:
                 print(f"{step}|   ∟ " + Fore.GREEN + f"{obj.name}" + Fore.RESET)
 
-
+def print_dir_list(content:list, step = ""):
+    #content.sort()
+    for i in range(0, len(content)):
+        step_next = ""
+        if isinstance(content[i], list):
+            if i != 0:  
+                step_next = "---"
+                if 2<len(content) and (i!=len(content)):
+                    step_next = "|---"
+            print_dir_list(content[i], step + step_next)
+        else:
+            for key, value in content[i].items():
+                if value == "dir":
+                    color = Fore.BLUE
+                else:
+                    color = Fore.GREEN 
+                print(f"{step + step_next}∟ " + color + f"{key}" + Fore.RESET)
 
 def main():
-    if len(sys.argv)>=2:
+    if len(sys.argv)>=1:
         try:
-            path = Path(sys.argv[1]) 
+            #path = Path(sys.argv[1]) 
+            path = Path("D:/GoIT/goit-markup-hw-01/images")
             path = Path.absolute(path)
             if path.exists(follow_symlinks=True):
                 print(Fore.BLUE + f"{path}" + Fore.RESET)
-                get_dir_content(path)
+                # get_dir_content(path)
+                print_dir_list(get_dir_list_content(path))
             else:
                 print("No path found for display")
         except Exception:
